@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Character } from '../models';
+import { Character } from '../../../models';
 import CharacterInfo from '../CharacterInfo';
-import AddCharacterForm from '../AddCharacterForm';
+import AddCharacterForm from './AddCharacterForm';
+import { useNavigate } from 'react-router-dom';
 
-const charactersList: Character[] = [
+export const charactersList: Character[] = [
   {
     id: 0,
     name: 'Jon Snow',
@@ -29,6 +30,8 @@ const CharactersList: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character>();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setCharacters(charactersList);
   }, []);
@@ -45,18 +48,20 @@ const CharactersList: React.FC = () => {
     setCharacters(characters.concat([c]));
   };
 
+  const onSelectCharacter = (c: Character) => {
+    setSelectedCharacter(c);
+
+    navigate('/character/' + c.id);
+  };
+
   return (
     <>
       <AddCharacterForm onAddCharacter={onAddCharacter} />
 
-      <br/>
-      {selectedCharacter &&
-        <CharacterInfo character={selectedCharacter} />
-      }
-      <br/>
+      <br/><br/>
 
       {characters.map((c) =>
-        <div onClick={() => setSelectedCharacter(c)}>
+        <div onClick={() => onSelectCharacter(c)}>
           <img style={{ maxWidth: '100px', maxHeight: '100px' }} alt={c.name} src={c.image} />
           ID: {c.id} - Name: {c.name}
         </div>
