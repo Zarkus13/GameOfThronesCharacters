@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Character } from '../../../models';
-import CharacterInfo from '../CharacterInfo';
+import { Character, ThroneAPICharacter, throneAPICharacterToCharacter } from '../../../models';
 import AddCharacterForm from './AddCharacterForm';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export const charactersList: Character[] = [
   {
@@ -29,11 +29,18 @@ export const charactersList: Character[] = [
 const CharactersList: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character>();
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCharacters(charactersList);
+    axios.get<ThroneAPICharacter[]>('https://thronesapi.com/api/v2/Characters')
+      .then((res) => {
+        setCharacters(
+          res.data.map(throneAPICharacterToCharacter)
+        );
+        setLoading(false);
+      });
   }, []);
 
   const onAddCharacter = (name: string, imageUrl: string, title?: string, family?: string) => {
@@ -60,7 +67,9 @@ const CharactersList: React.FC = () => {
 
       <br/><br/>
 
-      {characters.map((c) =>
+      {loading && <em>Loading ...</em>}
+
+      {!loading && characters.map((c) =>
         <div onClick={() => onSelectCharacter(c)}>
           <img style={{ maxWidth: '100px', maxHeight: '100px' }} alt={c.name} src={c.image} />
           ID: {c.id} - Name: {c.name}
