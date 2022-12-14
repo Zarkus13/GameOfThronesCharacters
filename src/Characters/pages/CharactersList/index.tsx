@@ -1,46 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Character, ThroneAPICharacter, throneAPICharacterToCharacter } from '../../../models';
+import { Character } from '../../../models';
 import AddCharacterForm from './AddCharacterForm';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-export const charactersList: Character[] = [
-  {
-    id: 0,
-    name: 'Jon Snow',
-    image: 'https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2022/06/got-kit-big__w770.jpg',
-    title: 'King in the North',
-    family: 'Stark'
-  },
-  {
-    id: 1,
-    name: 'Arya Stark',
-    image: 'https://resize-parismatch.lanmedia.fr/var/pm/public/media/image/2022/03/04/01/Game-of-Thrones-mais-au-fait-qui-se-trouve-sur-la-liste-macabre-d-Arya-Stark.jpg?VersionId=jayhYGAAvysgwqrLReBj5gX9xymRkSeb',
-    family: 'Stark'
-  },
-  {
-    id: 2,
-    name: 'Bronn of the Blackwater',
-    image: 'https://pbs.twimg.com/profile_images/621713203341295616/XD1GDRHX_400x400.jpg',
-    title: 'Knight of the Blackwater'
-  }
-];
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { addCharacters, deleteCharacter, fetchCharacters, setIsFetching } from '../../charactersReducer';
 
 const CharactersList: React.FC = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [selectedCharacter, setSelectedCharacter] = useState<Character>();
-  const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { characters, fetchingCharacters } = useAppSelector((state) => state.characters);
 
   useEffect(() => {
-    axios.get<ThroneAPICharacter[]>('https://thronesapi.com/api/v2/Characters')
-      .then((res) => {
-        setCharacters(
-          res.data.map(throneAPICharacterToCharacter)
-        );
-        setLoading(false);
-      });
+    if (!fetchingCharacters && characters.length === 0)
+      dispatch(fetchCharacters());
   }, []);
 
   const onAddCharacter = (name: string, imageUrl: string, title?: string, family?: string) => {
@@ -52,12 +25,10 @@ const CharactersList: React.FC = () => {
       family
     };
 
-    setCharacters(characters.concat([c]));
+    dispatch(addCharacters([c]));
   };
 
   const onSelectCharacter = (c: Character) => {
-    setSelectedCharacter(c);
-
     navigate('/character/' + c.id);
   };
 
@@ -67,12 +38,12 @@ const CharactersList: React.FC = () => {
 
       <br/><br/>
 
-      {loading && <em>Loading ...</em>}
+      {fetchingCharacters && <em>Loading ...</em>}
 
-      {!loading && characters.map((c) =>
-        <div onClick={() => onSelectCharacter(c)}>
-          <img style={{ maxWidth: '100px', maxHeight: '100px' }} alt={c.name} src={c.image} />
-          ID: {c.id} - Name: {c.name}
+      {!fetchingCharacters && characters.map((c) =>
+        <div key={c.id}>
+          <img onClick={() => onSelectCharacter(c)} style={{ maxWidth: '100px', maxHeight: '100px' }} alt={c.name} src={c.image} />
+          ID: {c.id} - Name: {c.name} - <button onClick={() => dispatch(deleteCharacter(c.id))}>Delete</button>
         </div>
       )}
     </>

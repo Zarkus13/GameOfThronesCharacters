@@ -4,13 +4,15 @@ import CharactersList from './Characters/pages/CharactersList';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import CharacterInfo from './Characters/pages/CharacterInfo';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -18,5 +20,5 @@ root.render(
         <Route path="/character/:id" element={<CharacterInfo />} />
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </Provider>
 );

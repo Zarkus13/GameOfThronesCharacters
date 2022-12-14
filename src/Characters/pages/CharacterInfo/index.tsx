@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { charactersList } from '../CharactersList';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { fetchCharacters } from '../../charactersReducer';
 
 const CharacterInfo: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { characters, fetchingCharacters } = useAppSelector((state) => state.characters);
   const { id } = useParams();
+
+  useEffect(() => {
+    if (!fetchingCharacters && characters.length === 0)
+      dispatch(fetchCharacters());
+  }, [fetchingCharacters]);
 
   if (Number.isNaN(Number(id)))
     return <div>Wrong ID !</div>
 
-  const character = charactersList.at(Number(id));
+  const character = characters.find((c) => c.id === Number(id));
+
+  if (fetchingCharacters)
+    return <div><em>Loading ...</em></div>;
 
   if (!character)
     return <div>Unknown character !</div>;
