@@ -1,0 +1,22 @@
+{
+  "global": {
+    "loading": "Loading"
+  },
+  "home": {
+    "description": "A React application that lists Game of Thrones Characters",
+    "go-to-list": "Go to characters list"
+  },
+  "characters": {
+    "id": "ID",
+    "name": "Name",
+    "title": "Title",
+    "family": "Family",
+    "image-url": "Image URL",
+    "delete": "Delete",
+    "add": "Add character",
+    "errors": {
+      "wrong-id": "Wrong ID",
+      "unknown": "Unknown character"
+    }
+  }
+}

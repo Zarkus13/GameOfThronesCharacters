@@ -1,0 +1,22 @@
+{
+  "global": {
+    "loading": "Chargement"
+  },
+  "home": {
+    "description": "Une application React listant les personnages de Game of Thrones",
+    "go-to-list": "Aller à la liste des personnages"
+  },
+  "characters": {
+    "id": "ID",
+    "name": "Nom",
+    "title": "Titre",
+    "family": "Famille",
+    "image-url": "URL de l'image",
+    "delete": "Supprimer",
+    "add": "Ajouter personnage",
+    "errors": {
+      "wrong-id": "ID incorrect",
+      "unknown": "Personnage inconnu"
+    }
+  }
+}
