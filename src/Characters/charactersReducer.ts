@@ -1,6 +1,7 @@
 import { Character, ThroneAPICharacter, throneAPICharacterToCharacter } from '../models';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { fetchCharactersAPI } from './api';
 
 interface State {
   characters: Character[],
@@ -12,13 +13,13 @@ const initialState: State = {
   fetchingCharacters: false
 };
 
-const addCharactersToState = (state: State, action: PayloadAction<Character[]>): State => ({
+export const addCharactersToState = (state: State, action: PayloadAction<Character[]>): State => ({
   ...state,
   characters: state.characters.concat(action.payload),
   fetchingCharacters: false
 });
 
-const deleteCharacterFromState = (state: State, action: PayloadAction<number>): State => {
+export const deleteCharacterFromState = (state: State, action: PayloadAction<number>): State => {
   const id = state.characters.findIndex((c) => c.id === action.payload);
 
   if (id === -1)
@@ -34,17 +35,14 @@ const deleteCharacterFromState = (state: State, action: PayloadAction<number>): 
   });
 };
 
-const setIsFetchingToState = (state: State) => ({
+export const setIsFetchingToState = (state: State) => ({
   ...state,
   fetchingCharacters: true
 });
 
 export const fetchCharacters = createAsyncThunk(
   'tasks/fetchCharacters',
-  () => axios.get<ThroneAPICharacter[]>('https://thronesapi.com/api/v2/Characters')
-    .then((res) =>
-      res.data.map(throneAPICharacterToCharacter)
-    )
+  fetchCharactersAPI
 );
 
 const charactersSlice = createSlice({
