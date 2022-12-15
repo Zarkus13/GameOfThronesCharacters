@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface Props {
   onAddCharacter: (name: string, imageUrl: string, title?: string, family?: string) => void
 }
 
 const AddCharacterForm: React.FC<Props> = ({ onAddCharacter }) => {
+  const { t } = useTranslation();
+
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
   const [family, setFamily] = useState('');
@@ -37,7 +41,7 @@ const AddCharacterForm: React.FC<Props> = ({ onAddCharacter }) => {
 
   return (
     <div>
-      Name :
+      {t('characters.name')} :
       <input
         type="text"
         value={name}
@@ -49,7 +53,7 @@ const AddCharacterForm: React.FC<Props> = ({ onAddCharacter }) => {
         }}
       /> <br/>
 
-      Title :
+      {t('characters.title')} :
       <input
         type="text"
         value={title}
@@ -61,7 +65,7 @@ const AddCharacterForm: React.FC<Props> = ({ onAddCharacter }) => {
         }}
       /> <br/>
 
-      Family :
+      {t('characters.family')} :
       <input
         type="text"
         value={family}
@@ -73,7 +77,7 @@ const AddCharacterForm: React.FC<Props> = ({ onAddCharacter }) => {
         }}
       /> <br/>
 
-      Image URL :
+      {t('characters.image-url')} :
       <input
         type="text"
         value={imageURL}
@@ -86,8 +90,9 @@ const AddCharacterForm: React.FC<Props> = ({ onAddCharacter }) => {
       /> <br/>
 
       <button onClick={onValidateForm}>
-        Add character
+        {t('characters.add')}
       </button>
+      <Link to="/characters">Close</Link>
     </div>
   );
 };

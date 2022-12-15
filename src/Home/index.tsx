@@ -4,14 +4,20 @@ import { HomeDescription, HomeLogo, HomeWrapper } from './styles';
 
 // @ts-ignore
 import Logo from './assets/logo.png';
+import { useTranslation } from 'react-i18next';
 
-const Home = () =>
-  <HomeWrapper>
-    <HomeLogo src={Logo} />
+const Home = () => {
+  const { t } = useTranslation();
 
-    <HomeDescription>A React application that lists Game of Thrones Characters</HomeDescription>
+  return (
+    <HomeWrapper>
+      <HomeLogo src={Logo} />
 
-    <Link to="/characters">Go to characters list</Link>
-  </HomeWrapper>;
+      <HomeDescription>{t('home.description')}</HomeDescription>
+
+      <Link to="/characters">{t('home.go-to-list')}</Link>
+    </HomeWrapper>
+  );
+};
 
 export default Home;

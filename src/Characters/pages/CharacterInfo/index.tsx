@@ -2,9 +2,13 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchCharacters } from '../../charactersReducer';
+import Loader from '../../../components/Loader';
+import { useTranslation } from 'react-i18next';
 
 const CharacterInfo: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+
   const { characters, fetchingCharacters } = useAppSelector((state) => state.characters);
   const { id } = useParams();
 
@@ -14,15 +18,15 @@ const CharacterInfo: React.FC = () => {
   }, [fetchingCharacters]);
 
   if (Number.isNaN(Number(id)))
-    return <div>Wrong ID !</div>
+    return <div>{t('characters.errors.wrong-id')} !</div>
 
   const character = characters.find((c) => c.id === Number(id));
 
   if (fetchingCharacters)
-    return <div><em>Loading ...</em></div>;
+    return <div><Loader /></div>;
 
   if (!character)
-    return <div>Unknown character !</div>;
+    return <div>{t('characters.errors.unknown')} !</div>;
 
   return (
     <div>
@@ -32,15 +36,15 @@ const CharacterInfo: React.FC = () => {
         src={character.image}
       /> <br/>
 
-      ID: {character.id} <br/>
-      Name: {character.name} <br/>
+      {t('characters.id')}: {character.id} <br/>
+      {t('characters.name')}: {character.name} <br/>
 
       {character.title &&
-        <>Title: {character.title}<br/></>
+        <>{t('characters.title')}: {character.title}<br/></>
       }
 
       {character.family &&
-        <>Family: {character.family}<br/></>
+        <>{t('characters.family')}: {character.family}<br/></>
       }
     </div>
   );
